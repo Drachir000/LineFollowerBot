@@ -16,17 +16,15 @@ bool Log::initialized = false;
 
 void Log::init() {
 	if (!initialized) {
-
 		stdio_init_all(); // Init USB serial port -> for console
 		sleep_ms(2000); // Give the USB serial connection time to establish
 
 		initialized = true;
-
 	}
 }
 
-const char* Log::level_color(const LogLevel level) {
-	switch(level) {
+const char *Log::level_color(const LogLevel level) {
+	switch (level) {
 		case DEBUG: return COLOR_CYAN;
 		case INFO: return COLOR_GREEN;
 		case WARNING: return COLOR_YELLOW;
@@ -35,8 +33,8 @@ const char* Log::level_color(const LogLevel level) {
 	}
 }
 
-const char * Log::level_name(const LogLevel level) {
-	switch(level) {
+const char *Log::level_name(const LogLevel level) {
+	switch (level) {
 		case DEBUG: return "DEBUG";
 		case INFO: return "INFO";
 		case WARNING: return "WARNING";
@@ -46,7 +44,6 @@ const char * Log::level_name(const LogLevel level) {
 }
 
 void Log::log(const LogLevel level, const char *format, const va_list args) {
-
 	if (!initialized) {
 		return;
 	}
@@ -61,22 +58,21 @@ void Log::log(const LogLevel level, const char *format, const va_list args) {
 
 	// Prefix only
 	printf("%s[%u:%02u:%02u.%03u] [Core %u] [%s]%s ",
-		level_color(level),
-		uptime_hours,
-		uptime_minutes,
-		uptime_seconds,
-		uptime_millis,
-		core,
-		level_name(level),
-		COLOR_RESET
-		);
+			level_color(level),
+			uptime_hours,
+			uptime_minutes,
+			uptime_seconds,
+			uptime_millis,
+			core,
+			level_name(level),
+			COLOR_RESET
+	);
 
 	// Message only, formatted
 	vprintf(format, args);
 
 	// Line break
 	printf("\n");
-
 }
 
 void Log::debug(const char *format, ...) {

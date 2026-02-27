@@ -6,7 +6,6 @@
 enum PowerLedColor { RED, GREEN, BLUE, YELLOW, AQUA, VIOLET, OFF };
 
 class PowerLED {
-
 private:
 	uint pin_r;
 	uint pin_g;
@@ -17,11 +16,12 @@ public:
 	PowerLED(uint red_pin, uint green_pin, uint blue_pin);
 
 	void init() const;
-	void setColor(PowerLedColor color);
-	[[nodiscard]] PowerLedColor getColor() const;
 
+	void setColor(PowerLedColor color);
+
+	[[nodiscard]] PowerLedColor getColor() const;
 };
 
-const char * led_color_name(PowerLedColor color);
+const char *led_color_name(PowerLedColor color);
 
 #endif

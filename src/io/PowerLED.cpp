@@ -10,8 +10,10 @@ PowerLED::PowerLED(const uint red_pin, const uint green_pin, const uint blue_pin
 }
 
 void PowerLED::init() const {
-	gpio_init(pin_r); gpio_set_dir(pin_r, GPIO_OUT);
-	gpio_init(pin_g); gpio_set_dir(pin_g, GPIO_OUT);
+	gpio_init(pin_r);
+	gpio_set_dir(pin_r, GPIO_OUT);
+	gpio_init(pin_g);
+	gpio_set_dir(pin_g, GPIO_OUT);
 	gpio_init(pin_b);
 	gpio_set_dir(pin_b, GPIO_OUT);
 }
