@@ -12,6 +12,8 @@ add_executable(LineFollowerBot src/main.cpp
         src/io/PowerLED.h
         src/io/Log.cpp
         src/io/Log.h
+        src/io/motor/DCGearMotor.cpp
+        src/io/motor/DCGearMotor.h
 )
 
 # Console over USB instead of the DEBUG Pins
@@ -19,6 +21,6 @@ add_executable(LineFollowerBot src/main.cpp
 pico_enable_stdio_usb(LineFollowerBot 1)
 pico_enable_stdio_uart(LineFollowerBot 0)
 
-target_link_libraries(LineFollowerBot pico_stdlib hardware_gpio)
+target_link_libraries(LineFollowerBot pico_stdlib hardware_gpio hardware_pwm)
 
 pico_add_extra_outputs(LineFollowerBot)
