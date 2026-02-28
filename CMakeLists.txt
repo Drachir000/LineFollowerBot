@@ -16,6 +16,8 @@ add_executable(LineFollowerBot src/main.cpp
         src/io/motor/DCGearMotor.h
         src/io/Button.cpp
         src/io/Button.h
+        src/io/SensorArray.cpp
+        src/io/SensorArray.h
 )
 
 # Console over USB instead of the DEBUG Pins
@@ -23,6 +25,6 @@ add_executable(LineFollowerBot src/main.cpp
 pico_enable_stdio_usb(LineFollowerBot 1)
 pico_enable_stdio_uart(LineFollowerBot 0)
 
-target_link_libraries(LineFollowerBot pico_stdlib hardware_gpio hardware_pwm pico_multicore pico_sync)
+target_link_libraries(LineFollowerBot pico_stdlib hardware_gpio hardware_pwm pico_multicore pico_sync hardware_i2c)
 
 pico_add_extra_outputs(LineFollowerBot)

@@ -1,6 +1,7 @@
 #include "io/Button.h"
 #include "io/Log.h"
 #include "io/PowerLED.h"
+#include "io/SensorArray.h"
 #include "io/motor/DCGearMotor.h"
 #include "pico/mutex.h"
 #include "pico/multicore.h"
@@ -12,6 +13,8 @@
 #define MOTOR_LEFT_ENA_PIN 17
 #define MOTOR_LEFT_IN1_PIN 18
 #define MOTOR_LEFT_IN2_PIN 19
+#define I2C_SDA_PIN 4
+#define I2C_SCL_PIN 5
 
 // Mutex Key
 auto_init_mutex(robot_mutex);
@@ -24,6 +27,8 @@ struct RobotData {
 
 	//float motor_right_speed;
 	//bool motor_right_hard_brake;
+
+	SensorReadings ir_readings;
 } shared_data;
 
 enum ROBOT_STATE {
@@ -42,24 +47,25 @@ PowerLedColor get_power_led_color(const ROBOT_STATE state) {
 	}
 }
 
-void io_init(const PowerLED &power_led, DCGearMotor &motor_left) {
-	Log::info("Initializing IO...");
-
-	power_led.init();
-	motor_left.init();
-}
-
 void io_loop() {
 	PowerLED power_led(LED_RED_PIN, LED_GREEN_PIN, LED_BLUE_PIN);
-	DCGearMotor motor_left(MOTOR_LEFT_ENA_PIN, MOTOR_LEFT_IN1_PIN, MOTOR_LEFT_IN2_PIN);
+	//DCGearMotor motor_left(MOTOR_LEFT_ENA_PIN, MOTOR_LEFT_IN1_PIN, MOTOR_LEFT_IN2_PIN);
+	SensorArray sensor_array(I2C_SDA_PIN, I2C_SCL_PIN );
 
-	io_init(power_led, motor_left);
+	Log::info("Initializing IO...");
+	power_led.init();
+	//motor_left.init();
+	sensor_array.init();
 
 	Log::info("Starting IO Loop...");
 	while (true) {
 		const absolute_time_t loop_start = get_absolute_time();
 
+		const SensorReadings readings = sensor_array.read_all();
+
 		mutex_enter_blocking(&robot_mutex);
+
+		shared_data.ir_readings = readings;
 
 		const PowerLedColor power_led_color = shared_data.power_led_color;
 		const float motor_left_speed = shared_data.motor_left_speed;
@@ -68,10 +74,10 @@ void io_loop() {
 		mutex_exit(&robot_mutex);
 
 		power_led.set_color(power_led_color);
-		motor_left.setSpeed(motor_left_speed, motor_left_hard_brake);
+		//motor_left.setSpeed(motor_left_speed, motor_left_hard_brake);
 
-		// True 100Hz
-		sleep_until(delayed_by_ms(loop_start, 10));
+		// ca. 65Hz
+		sleep_until(delayed_by_ms(loop_start, 15));
 	}
 }
 
@@ -84,32 +90,14 @@ void logic_loop(ROBOT_STATE robot_state = IDLE) {
 	while (true) {
 		const absolute_time_t loop_start = get_absolute_time();
 
-		button.wait_for_button_press();
-
 		mutex_enter_blocking(&robot_mutex);
-		shared_data.power_led_color = VIOLET;
-		shared_data.motor_left_speed = 50.0f;
-		shared_data.motor_left_hard_brake = false;
+		const SensorReadings readings = shared_data.ir_readings;
 		mutex_exit(&robot_mutex);
 
-		button.wait_for_button_press(true, 200);
+		Log::debug("IR Readings: 1: %f, 2: %f, 3: %f, 4: %f, 5: %f", readings.ir1, readings.ir2, readings.ir3, readings.ir4, readings.ir5);
 
-		mutex_enter_blocking(&robot_mutex);
-		shared_data.power_led_color = RED;
-		shared_data.motor_left_speed = -80.0f;
-		shared_data.motor_left_hard_brake = false;
-		mutex_exit(&robot_mutex);
-
-		sleep_ms(2500);
-
-		mutex_enter_blocking(&robot_mutex);
-		shared_data.power_led_color = get_power_led_color(robot_state);
-		shared_data.motor_left_speed = 0.0f;
-		shared_data.motor_left_hard_brake = true;
-		mutex_exit(&robot_mutex);
-
-		// True 50Hz (concept for later, right now there is still the blocking wait_for_button_press call)
-		sleep_until(delayed_by_ms(loop_start, 20));
+		// True 25Hz
+		sleep_until(delayed_by_ms(loop_start, 40));
 	}
 }
 
