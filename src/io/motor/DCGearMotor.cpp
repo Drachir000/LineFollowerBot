@@ -10,6 +10,10 @@
 
 #define MAX_PWM 65535
 
+static bool isZeroSpeed(const float speed_percentage) {
+	return speed_percentage > -0.1f && speed_percentage < 0.1f;
+}
+
 DCGearMotor::DCGearMotor(const uint pwm_pin, const uint dir1_pin, const uint dir2_pin) {
 	this->pwm_pin = pwm_pin;
 	this->dir1_pin = dir1_pin;
@@ -40,17 +44,17 @@ void DCGearMotor::setSpeed(float speed_percentage, const bool hard_brake) const 
 		speed_percentage = 100;
 	}
 
-	gpio_put(dir1_pin, speed_percentage > 0 || (hard_brake && (speed_percentage > -0.1f && speed_percentage < 0.1f)));
-	gpio_put(dir2_pin, speed_percentage < 0 || (hard_brake && (speed_percentage > -0.1f && speed_percentage < 0.1f)));
+	gpio_put(dir1_pin, speed_percentage > 0 || (hard_brake && isZeroSpeed(speed_percentage)));
+	gpio_put(dir2_pin, speed_percentage < 0 || (hard_brake && isZeroSpeed(speed_percentage)));
 
-	if (speed_percentage == 0) {
+	if (isZeroSpeed(speed_percentage)) {
 		pwm_set_gpio_level(pwm_pin, hard_brake ? MAX_PWM : 0);
 	} else {
 		if (speed_percentage < 0) {
 			speed_percentage = -speed_percentage;
 		}
 
-		uint16_t duty_cycle = (uint16_t) ((speed_percentage / 100.0f) * MAX_PWM);
+		const uint16_t duty_cycle = (uint16_t) ((speed_percentage / 100.0f) * MAX_PWM);
 		pwm_set_gpio_level(pwm_pin, duty_cycle);
 	}
 }
