@@ -21,7 +21,7 @@ void PowerLED::init() const {
 	gpio_set_dir(pin_b, GPIO_OUT);
 }
 
-void PowerLED::setColor(const PowerLedColor color) {
+void PowerLED::set_color(const PowerLedColor color) {
 	current_color = color;
 
 	const bool r_state = (color == RED || color == YELLOW || color == VIOLET);
@@ -33,7 +33,7 @@ void PowerLED::setColor(const PowerLedColor color) {
 	gpio_put(pin_b, b_state);
 }
 
-PowerLedColor PowerLED::getColor() const {
+PowerLedColor PowerLED::get_color() const {
 	return current_color;
 }
 

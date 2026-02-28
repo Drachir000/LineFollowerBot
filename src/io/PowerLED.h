@@ -17,9 +17,9 @@ public:
 
 	void init() const;
 
-	void setColor(PowerLedColor color);
+	void set_color(PowerLedColor color);
 
-	[[nodiscard]] PowerLedColor getColor() const;
+	[[nodiscard]] PowerLedColor get_color() const;
 };
 
 const char *led_color_name(PowerLedColor color);
