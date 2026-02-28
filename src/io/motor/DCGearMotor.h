@@ -5,13 +5,13 @@
 
 class DCGearMotor {
 private:
-	uint pin_ena;
-	uint pin_in1;
-	uint pin_in2;
+	uint pwm_pin;
+	uint dir1_pin;
+	uint dir2_pin;
 	uint pwm_slice{};
 
 public:
-	DCGearMotor(uint ena_pin, uint in1_pin, uint in2_pin);
+	DCGearMotor(uint pwm_pin, uint dir1_pin, uint dir2_pin);
 
 	void init();
 
