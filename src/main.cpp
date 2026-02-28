@@ -1,5 +1,6 @@
 #include <cstdio>
 
+#include "io/Button.h"
 #include "io/Log.h"
 #include "io/PowerLED.h"
 #include "io/motor/DCGearMotor.h"
@@ -14,6 +15,7 @@
 #define MOTOR_1_IN2_PIN 19
 
 PowerLED power_led(LED_RED_PIN, LED_GREEN_PIN, LED_BLUE_PIN);
+Button button(BUTTON_PIN);
 DCGearMotor motor_1(MOTOR_1_ENA_PIN, MOTOR_1_IN1_PIN, MOTOR_1_IN2_PIN);
 
 void init() {
@@ -22,11 +24,8 @@ void init() {
 	Log::info("Initializing...");
 
 	power_led.init();
+	button.init();
 	motor_1.init();
-
-	gpio_init(BUTTON_PIN);
-	gpio_set_dir(BUTTON_PIN, GPIO_IN);
-	gpio_pull_up(BUTTON_PIN);
 
 	Log::info("Initialized.");
 }
@@ -47,31 +46,13 @@ PowerLedColor get_power_led_color(const ROBOT_STATE state) {
 	}
 }
 
-void wait_for_button_press(const uint button_pin, const bool wait_for_release, const bool debounce) {
-	if (debounce) {
-		sleep_ms(200);
-	}
-
-	while (wait_for_release && gpio_get(button_pin) == 0) {
-		sleep_ms(10);
-	}
-
-	while (true) {
-		if (gpio_get(button_pin) == 0) {
-			break;
-		}
-
-		sleep_ms(10);
-	}
-}
-
 int main() {
 	init();
 
 	while (true) {
 		power_led.setColor(YELLOW);
 
-		wait_for_button_press(BUTTON_PIN, true, true);
+		button.wait_for_button_press();
 
 		power_led.setColor(BLUE);
 		motor_1.setSpeed(50.0f);

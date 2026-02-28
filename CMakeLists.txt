@@ -14,6 +14,8 @@ add_executable(LineFollowerBot src/main.cpp
         src/io/Log.h
         src/io/motor/DCGearMotor.cpp
         src/io/motor/DCGearMotor.h
+        src/io/Button.cpp
+        src/io/Button.h
 )
 
 # Console over USB instead of the DEBUG Pins
