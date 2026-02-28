@@ -23,6 +23,6 @@ add_executable(LineFollowerBot src/main.cpp
 pico_enable_stdio_usb(LineFollowerBot 1)
 pico_enable_stdio_uart(LineFollowerBot 0)
 
-target_link_libraries(LineFollowerBot pico_stdlib hardware_gpio hardware_pwm)
+target_link_libraries(LineFollowerBot pico_stdlib hardware_gpio hardware_pwm pico_multicore pico_sync)
 
 pico_add_extra_outputs(LineFollowerBot)
