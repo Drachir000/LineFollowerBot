@@ -14,7 +14,8 @@ SensorArray::SensorArray(const uint i2c_sda_pin, const uint i2c_scl_pin) {
 }
 
 void SensorArray::init() const {
-	Log::info("Initializing I2C for sensor array with a baudrate of %dHz and SDA_Pin = %u, SCL_Pin = %u ...", I2C_BAUDRATE, i2c_sda_pin, i2c_scl_pin);
+	Log::info("Initializing I2C for sensor array with a baudrate of %dHz and SDA_Pin = %u, SCL_Pin = %u ...",
+			I2C_BAUDRATE, i2c_sda_pin, i2c_scl_pin);
 
 	i2c_init(i2c0, I2C_BAUDRATE);
 	gpio_set_function(i2c_sda_pin, GPIO_FUNC_I2C);
@@ -63,7 +64,7 @@ uint16_t SensorArray::read_ads1115_channel(const uint8_t address, const uint8_t 
 	i2c_read_blocking(i2c0, address, data, 2, false);
 
 	const int16_t raw_val = (data[0] << 8) | data[1];
-	return (raw_val < 0) ? 0 : (uint16_t)raw_val;
+	return (raw_val < 0) ? 0 : (uint16_t) raw_val;
 }
 
 SensorReadings SensorArray::read_all() const {
@@ -78,11 +79,11 @@ SensorReadings SensorArray::read_all() const {
 	// IR 5 from ads1115 2 (0x49)
 	readings.ir5 = read_ads1115_channel(ads_address_2, 0) / MAX_VALUE;
 
-	if(readings.ir1 > 1.0f) readings.ir1 = 1.0f;
-	if(readings.ir2 > 1.0f) readings.ir2 = 1.0f;
-	if(readings.ir3 > 1.0f) readings.ir3 = 1.0f;
-	if(readings.ir4 > 1.0f) readings.ir4 = 1.0f;
-	if(readings.ir5 > 1.0f) readings.ir5 = 1.0f;
+	if (readings.ir1 > 1.0f) readings.ir1 = 1.0f;
+	if (readings.ir2 > 1.0f) readings.ir2 = 1.0f;
+	if (readings.ir3 > 1.0f) readings.ir3 = 1.0f;
+	if (readings.ir4 > 1.0f) readings.ir4 = 1.0f;
+	if (readings.ir5 > 1.0f) readings.ir5 = 1.0f;
 
 	return readings;
 }

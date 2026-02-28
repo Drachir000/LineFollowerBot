@@ -50,7 +50,7 @@ PowerLedColor get_power_led_color(const ROBOT_STATE state) {
 void io_loop() {
 	PowerLED power_led(LED_RED_PIN, LED_GREEN_PIN, LED_BLUE_PIN);
 	//DCGearMotor motor_left(MOTOR_LEFT_ENA_PIN, MOTOR_LEFT_IN1_PIN, MOTOR_LEFT_IN2_PIN);
-	SensorArray sensor_array(I2C_SDA_PIN, I2C_SCL_PIN );
+	SensorArray sensor_array(I2C_SDA_PIN, I2C_SCL_PIN);
 
 	Log::info("Initializing IO...");
 	power_led.init();
@@ -94,7 +94,8 @@ void logic_loop(ROBOT_STATE robot_state = IDLE) {
 		const SensorReadings readings = shared_data.ir_readings;
 		mutex_exit(&robot_mutex);
 
-		Log::debug("IR Readings: 1: %f, 2: %f, 3: %f, 4: %f, 5: %f", readings.ir1, readings.ir2, readings.ir3, readings.ir4, readings.ir5);
+		Log::debug("IR Readings: 1: %f, 2: %f, 3: %f, 4: %f, 5: %f", readings.ir1, readings.ir2, readings.ir3,
+					readings.ir4, readings.ir5);
 
 		// True 25Hz
 		sleep_until(delayed_by_ms(loop_start, 40));

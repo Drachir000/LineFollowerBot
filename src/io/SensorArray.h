@@ -18,7 +18,9 @@ private:
 
 public:
 	SensorArray(uint i2c_sda_pin, uint i2c_scl_pin);
+
 	void init() const;
+
 	SensorReadings read_all() const;
 };
 
