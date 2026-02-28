@@ -57,7 +57,7 @@ void io_loop() {
 
 	Log::info("Starting IO Loop...");
 	while (true) {
-		const uint32_t start_time = to_ms_since_boot(get_absolute_time());
+		const absolute_time_t loop_start = get_absolute_time();
 
 		mutex_enter_blocking(&robot_mutex);
 
@@ -70,10 +70,8 @@ void io_loop() {
 		power_led.set_color(power_led_color);
 		motor_left.setSpeed(motor_left_speed, motor_left_hard_brake);
 
-		uint32_t sleep_time = 10 - (to_ms_since_boot(get_absolute_time()) - start_time); // True 100Hz
-		if (sleep_time > 10) sleep_time = 0;
-		// "> 10" since sleep_time is an unsinged int and thus can't be "< 0", instead it underflows
-		if (sleep_time != 0) sleep_ms(sleep_time);
+		// True 100Hz
+		sleep_until(delayed_by_ms(loop_start, 10));
 	}
 }
 
@@ -84,7 +82,7 @@ void logic_loop(ROBOT_STATE robot_state = IDLE) {
 
 	Log::info("Starting Logic Loop...");
 	while (true) {
-		const uint32_t start_time = to_ms_since_boot(get_absolute_time());
+		const absolute_time_t loop_start = get_absolute_time();
 
 		button.wait_for_button_press();
 
@@ -110,10 +108,8 @@ void logic_loop(ROBOT_STATE robot_state = IDLE) {
 		shared_data.motor_left_hard_brake = true;
 		mutex_exit(&robot_mutex);
 
-		uint32_t sleep_time = 20 - (to_ms_since_boot(get_absolute_time()) - start_time);
 		// True 50Hz (concept for later, right now there is still the blocking wait_for_button_press call)
-		if (sleep_time > 20) sleep_time = 0;
-		if (sleep_time != 0) sleep_ms(sleep_time);
+		sleep_until(delayed_by_ms(loop_start, 20));
 	}
 }
 
