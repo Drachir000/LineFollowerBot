@@ -1,5 +1,6 @@
 #include "PowerLED.h"
 
+#include "Log.h"
 #include "pico/stdlib.h"
 
 PowerLED::PowerLED(const uint red_pin, const uint green_pin, const uint blue_pin) {
@@ -10,6 +11,8 @@ PowerLED::PowerLED(const uint red_pin, const uint green_pin, const uint blue_pin
 }
 
 void PowerLED::init() const {
+	Log::info("Initializing PowerLED with Pin_Red = %u, Pin_Green = %u, Pin_Blue = %u...", pin_r, pin_g, pin_b);
+
 	gpio_init(pin_r);
 	gpio_set_dir(pin_r, GPIO_OUT);
 	gpio_init(pin_g);

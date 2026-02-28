@@ -1,5 +1,6 @@
 #include "Button.h"
 
+#include "Log.h"
 #include "pico/stdlib.h"
 
 Button::Button(const uint pin) {
@@ -7,6 +8,8 @@ Button::Button(const uint pin) {
 }
 
 void Button::init() const {
+	Log::info("Initializing Button with Pin = %u...", pin);
+
 	gpio_init(pin);
 	gpio_set_dir(pin, GPIO_IN);
 	gpio_pull_up(pin);

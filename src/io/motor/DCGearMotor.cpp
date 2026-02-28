@@ -4,6 +4,7 @@
 
 #include "DCGearMotor.h"
 
+#include "../Log.h"
 #include "hardware/pwm.h"
 #include "pico/stdlib.h"
 
@@ -16,10 +17,8 @@ DCGearMotor::DCGearMotor(const uint pwm_pin, const uint dir1_pin, const uint dir
 }
 
 void DCGearMotor::init() {
-	gpio_init(pin_in1);
-	gpio_set_dir(pin_in1, GPIO_OUT);
-	gpio_init(pin_in2);
-	gpio_set_dir(pin_in2, GPIO_OUT);
+	Log::info("Initializing DCGearMotor with PWM_Pin = %u, Dir1_Pin = %u, Dir2_Pin = %u...", pwm_pin, dir1_pin,
+			dir2_pin);
 
 	gpio_init(dir1_pin);
 	gpio_set_dir(dir1_pin, GPIO_OUT);
