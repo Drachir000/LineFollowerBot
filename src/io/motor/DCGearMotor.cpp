@@ -9,7 +9,7 @@
 
 #define MAX_PWM 65535
 
-DCGearMotor::DCGearMotor(uint ena_pin, uint in1_pin, uint in2_pin) {
+DCGearMotor::DCGearMotor(const uint ena_pin, const uint in1_pin, const uint in2_pin) {
 	pin_ena = ena_pin;
 	pin_in1 = in1_pin;
 	pin_in2 = in2_pin;
